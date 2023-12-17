@@ -1,0 +1,11 @@
+{
+  "name": "hr-management",
+  "version": "1.0.0",
+  "description": "Management app for Human resources",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo Test"
+  },
+  "author": "",
+  "license": "ISC"
+}
