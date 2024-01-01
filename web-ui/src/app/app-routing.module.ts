@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './components/layout/main-layout/main-layout.component';
 import { EntranceComponent } from './components/layout/entrance/entrance.component';
+import { animation } from '@angular/animations';
 
 const routes: Routes = [{
   path: '',
@@ -11,7 +12,10 @@ const routes: Routes = [{
 },
 {
   path: 'entrance',
-  component: EntranceComponent
+  component: EntranceComponent,
+  // data:[
+  //   animation
+  // ]
 },
 {
   path: '',
@@ -24,11 +28,12 @@ const routes: Routes = [{
           (m) => m.CandidateModule
         )
     },
-    // {
-    //   path: 'dashboard',
-    //   loadChildren: () =>
-    //     import('./dashboard/dashboard.module').then((m) => m.DashboardModule)
-    // },
+    {
+      path: 'employees',
+      loadChildren: () =>
+        import('./components/emloyee/employee.module').then(
+          (m) => m.EmployeeModule)
+    },
   ]
 }];
 

@@ -1,18 +1,17 @@
 import { NgModule } from "@angular/core";
 import { ListComponent } from "./list/list.component";
-import { CandidateRoutingModule } from "./candidates-routing.module";
 import { CommonModules } from "src/app/modules/commons.module";
-import { SubmitComponent } from './submit/submit.component';
 import { RouterModule } from "@angular/router";
 import { DatePipe } from "@angular/common";
+import { EmployeeRoutingModule } from "./employee-routing.module";
 
 @NgModule({
   providers: [DatePipe],
-  declarations: [ListComponent, SubmitComponent],
+  declarations: [ListComponent],
   imports: [
-    CandidateRoutingModule,
+    EmployeeRoutingModule,
     RouterModule,
     CommonModules,
   ]
 })
-export class CandidateModule {}
+export class EmployeeModule {}

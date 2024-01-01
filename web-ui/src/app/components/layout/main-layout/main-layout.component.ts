@@ -1,19 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CandidateInfo } from 'src/app/models/candidate';
+import { CandidateService } from '../../../modules/services/candidate.service';
+import { SelectionModel } from '@angular/cdk/collections';
+import { AddEmployeeInfo, EmployeeInfo } from 'src/app/models/employee';
+import { EmployeeService } from '../../../modules/services/employee.service';
+import { DatePipe } from '@angular/common';
 
-
-const ELEMENT_DATA: CandidateInfo[] = [
-  {names: 'Elif Günaçtı', submitDate: '11.10.2023', cvUrl: '', criteriaScore1: '9/10', criteriaScore2: '5/10', criteriaScore3: '5/10', criteriaScore4: '7/10'},
-  {names: 'Elif Günaçtı', submitDate: '11.10.2023', cvUrl: '', criteriaScore1: '9/10', criteriaScore2: '5/10', criteriaScore3: '5/10', criteriaScore4: '7/10'},
-  {names: 'Elif Günaçtı', submitDate: '11.10.2023', cvUrl: '', criteriaScore1: '9/10', criteriaScore2: '5/10', criteriaScore3: '5/10', criteriaScore4: '7/10'},
-  {names: 'Elif Günaçtı', submitDate: '11.10.2023', cvUrl: '', criteriaScore1: '9/10', criteriaScore2: '5/10', criteriaScore3: '5/10', criteriaScore4: '7/10'},
-  {names: 'Elif Günaçtı', submitDate: '11.10.2023', cvUrl: '', criteriaScore1: '9/10', criteriaScore2: '5/10', criteriaScore3: '5/10', criteriaScore4: '7/10'},
-  {names: 'Elif Günaçtı', submitDate: '11.10.2023', cvUrl: '', criteriaScore1: '9/10', criteriaScore2: '5/10', criteriaScore3: '5/10', criteriaScore4: '7/10'},
-  {names: 'Elif Günaçtı', submitDate: '11.10.2023', cvUrl: '', criteriaScore1: '9/10', criteriaScore2: '5/10', criteriaScore3: '5/10', criteriaScore4: '7/10'},
-  {names: 'Elif Günaçtı', submitDate: '11.10.2023', cvUrl: '', criteriaScore1: '9/10', criteriaScore2: '5/10', criteriaScore3: '5/10', criteriaScore4: '7/10'},
-  {names: 'Elif Günaçtı', submitDate: '11.10.2023', cvUrl: '', criteriaScore1: '9/10', criteriaScore2: '5/10', criteriaScore3: '5/10', criteriaScore4: '7/10'},
-  {names: 'Elif Günaçtı', submitDate: '11.10.2023', cvUrl: '', criteriaScore1: '9/10', criteriaScore2: '5/10', criteriaScore3: '5/10', criteriaScore4: '7/10'},
-];
 
 
 @Component({
@@ -23,28 +15,41 @@ const ELEMENT_DATA: CandidateInfo[] = [
 })
 export class MainLayoutComponent implements OnInit{
 
-  ngOnInit(): void {
-    console.log();
-  }
-
   columnTemplateList: any[] = [
-    {columnName: 'Aday Ad Soyad', columnKey: 'names'},
-    {columnName: 'Başvuru Tarihi', columnKey: 'submitDate'},
-    {columnName: '(Kriter 1) Puanı', columnKey: 'criteriaScore1'},
-    {columnName: '(Kriter 2) Puanı', columnKey: 'criteriaScore2'},
-    {columnName: '(Kriter 3) Puanı', columnKey: 'criteriaScore3'},
-    {columnName: '(Kriter 4) Puanı', columnKey: 'criteriaScore4'},
+    {columnName: 'Ad', columnKey: 'adi'},
+    {columnName: 'Soyad', columnKey: 'soyadi'},
+    {columnName: 'Email', columnKey: 'email'},
+    {columnName: 'Telefon No', columnKey: 'telefon_numarasi'},
+    {columnName: 'ELTS Puanı', columnKey: 'elts_puani'},
+    {columnName: 'Universite', columnKey: 'universite'},
+    {columnName: 'Not Ortalamasi', columnKey: 'not_ortalamasi'},
+    {columnName: 'Deneyim Yılı', columnKey: 'is_deneyimi'},
+    {columnName: 'Basvurulan Pozisyon', columnKey: 'basvurulan_pozisyon'},
+    {columnName: 'Basvurulan Departman', columnKey: 'basvurulan_departman'},
   ];
-  displayedColumns: string[] = ['cv'].concat(this.columnTemplateList.map(elm => elm.columnKey));
-  dataSource = ELEMENT_DATA;
+  displayedColumns: string[] = this.columnTemplateList.map(elm => elm.columnKey);
+  candidateSelection = new SelectionModel<CandidateInfo>(true, []);
+  dataSource: any;
 
   isFocus1 = false;
   isFocus2 = false;
+  isSelectCandidate = false;
 
+  constructor(private candidateService: CandidateService,
+              private employeeService: EmployeeService,
+              private datePipe: DatePipe){}
 
+  ngOnInit(): void {
+    this.setDataSource();
+  }
+
+  setDataSource(){
+    this.candidateService.getCandidates().subscribe((response) => {
+      this.dataSource = response.candidateList;
+    });
+  }
 
   changeFocus(idx:number , isFocused:boolean){
-    console.log(idx, isFocused);
     if (idx == 1) {
       this.isFocus1 = isFocused;
       this.isFocus2 = false;
@@ -52,6 +57,44 @@ export class MainLayoutComponent implements OnInit{
       this.isFocus2 = isFocused;
       this.isFocus1 = false;
     }
+  }
+
+  selectCandidate(){
+    if (this.displayedColumns.includes('select')) {
+      this.displayedColumns = this.displayedColumns.filter((displayedColumn) => displayedColumn !== 'select');
+    }
+    else {
+      this.displayedColumns.splice(0, 0, 'select');
+    }
+    this.isSelectCandidate = !this.isSelectCandidate;
+  }
+
+  approveCandidate(){
+    let employeeList:AddEmployeeInfo[] = [];
+    this.candidateSelection.selected.forEach((candidateInfo) => {
+      employeeList.push({
+        candidateId: candidateInfo.basvuran_id,
+        name: candidateInfo.adi,
+        surname: candidateInfo.soyadi,
+        email: candidateInfo.email,
+        phoneNumber: candidateInfo.telefon_numarasi,
+        department: candidateInfo.basvurulan_departman,
+        position: candidateInfo.basvurulan_pozisyon,
+        performanceScore: candidateInfo.not_ortalamasi,
+        attendanceDate: this.datePipe.transform(new Date(), 'yyyy-MM-dd') || '2000-01-01'
+      });
+    });
+    this.employeeService.addNewEmployees({
+      employeeInfoList: employeeList
+    }).subscribe(() => {
+      this.candidateSelection.clear();
+      this.setDataSource();
+    });
+    this.selectCandidate();
+  }
+
+  rejectCandidate(){
+    this.selectCandidate();
   }
 
 }

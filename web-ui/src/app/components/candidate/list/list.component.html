@@ -1,3 +1,48 @@
-<div class="app-sidenav-content">
-  Components open here
+<div (click)="selectCandidate()" style="width: 161px; height: 59px; padding: 10px; left: 25%; top: 43px; position: absolute; background: #0B2D4D; border-radius: 16px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+  <div style="text-align: center; color: white; font-size: 24px; font-family: Calibri; font-weight: 400; word-wrap: break-word">{{isSelectCandidate ? 'Sonlandır' : 'Seçim Yap'}}</div>
+</div>
+<ng-container *ngIf="isSelectCandidate">
+  <div (click)="approveCandidate()" style="width: 124px; height: 44px; padding: 10px; left: 560px; top: 50px; position: absolute; background: #45B2C1; border-radius: 16px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+    <div style="text-align: center; color: white; font-size: 16px; font-family: Calibri; font-weight: 300; word-wrap: break-word">İşe Al</div>
+  </div>
+  <div style="width: 124px; height: 44px; padding: 10px; left: 690px; top: 50px; position: absolute; background: #45B2C1; border-radius: 16px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+    <div style="text-align: center; color: white; font-size: 16px; font-family: Calibri; font-weight: 300; word-wrap: break-word">Reddet</div>
+  </div>
+</ng-container>
+<div style="width: 85%; height: 80%; left: 25%; top: 16%; position: absolute">
+  <div style="width: 85%; height: 83px; padding: 10px; left: 0px; top: 0px; position: absolute; background: #1B65A9; border-top-left-radius: 32px; border-top-right-radius: 32px; border: 3px black solid; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+      <div style="text-align: center; color: white; font-size: 32px; font-family: Calibri; font-weight: 400; word-wrap: break-word">Yeni Başvurular</div>
+  </div>
+  <div class="example-table-container">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container *ngIf="isSelectCandidate" matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>Seç </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? candidateSelection.toggle(row) : null"
+                        [checked]="candidateSelection.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container *ngFor="let columnTemplate of columnTemplateList" matColumnDef="{{columnTemplate.columnKey}}">
+        <th mat-header-cell *matHeaderCellDef sticky> {{columnTemplate.columnName}} </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="columnTemplate.columnKey != 'cv';else cvIcon">
+            {{element[columnTemplate.columnKey]}}
+          </div>
+          <ng-template #cvIcon>
+            <mat-icon svgIcon="solar_file"></mat-icon>
+          </ng-template>
+        </td>
+      </ng-container>
+
+    <!-- <ng-container matColumnDef="cv">
+      <th mat-header-cell *matHeaderCellDef sticky> CV </th>
+    </ng-container> -->
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
 </div>

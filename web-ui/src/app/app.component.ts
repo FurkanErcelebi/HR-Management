@@ -18,6 +18,10 @@ export class AppComponent implements OnInit{
           `solar_file`,
           domSanitizer.bypassSecurityTrustResourceUrl(`../assets/images/solar_file-bold.svg`)
         );
+        this.matIconRegistry.addSvgIcon(
+          `grid_table`,
+          domSanitizer.bypassSecurityTrustResourceUrl(`../assets/images/grid-table.svg`)
+        );
 
   }
 

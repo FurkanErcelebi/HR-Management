@@ -1,4 +1,4 @@
-
+<!--
   <mat-nav-list>
       <mat-list-item routerLink="#">
           <mat-icon>article</mat-icon>
@@ -13,4 +13,26 @@
               <a mat-list-item routerLink="#">Ekle</a>
           </mat-nav-list>
       </mat-expansion-panel>
-  </mat-nav-list>
+  </mat-nav-list> -->
+
+<div style="width: 20%; height: 16%; padding: 10px; left: 0px; top: 0px; position: absolute; background: #1B65A9; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+    <div style="text-align: center; color: white; font-size: 170%; font-family: Calibri; font-weight: 400; word-wrap: break-word">Başvurular</div>
+</div>
+<div style="width: 35px; height: 23px; left: 26px; top: 40px; position: absolute">
+    <div style="width: 35px; height: 0px; left: 0px; top: 0px; position: absolute; border: 2px white solid"></div>
+    <div style="width: 35px; height: 0px; left: 0px; top: 11.50px; position: absolute; border: 2px white solid"></div>
+    <div style="width: 35px; height: 0px; left: 0px; top: 23px; position: absolute; border: 2px white solid"></div>
+</div>
+<div style="width: 20%; height: 85%; left: 0px; top: 115px; position: absolute; background: #D9D9D9"></div>
+<div *ngFor="let sidePage of sidePageList; index as i"
+      (mouseenter)="changeFocus(i, true)"
+      (mouseleave)="changeFocus(i, false)"
+      [ngStyle]="{'border': sidePage.isFocus ? '8px #45B2C1 solid': ''}"
+      style="width: 16%; height: 80px; padding: 10px; left: 26px; position: absolute; background: #1B65A9; border-radius: 16px; justify-content: center; align-items: center; gap: 10px; display: inline-flex"
+      [style.top] = "getTopStyleValue(i)">
+    <div style="text-align: center; color: white; font-size: 24px; font-family: Calibri; font-weight: 400; word-wrap: break-word" [routerLink]="[sidePage.url]">{{sidePage.title}}</div>
+</div>
+<div style="width: 16%; height: 80px; padding: 10px; left: 26px; top: 590px; position: absolute; background: #45B2C1; border-radius: 16px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+    <div [routerLink]="['/entrance']" style="text-align: center; color: black; font-size: 24px; font-family: Calibri; font-weight: 400; word-wrap: break-word">Ana Sayfaya Dön</div>
+</div>
+<div style="width: 257px; height: 39px; left: 1%; top: 685px; position: absolute; text-align: center; color: #45B2C1; font-size: 16px; font-family: Calibri; font-weight: 700; text-transform: capitalize; word-wrap: break-word">... Şirketi İnsan Kaynakları Uygulaması</div>

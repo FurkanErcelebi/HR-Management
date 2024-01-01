@@ -1,10 +1,19 @@
 
 export class CandidateInfo {
-  names: string;
-  submitDate: string;
-  cvUrl: string;
-  criteriaScore1: string;
-  criteriaScore2: string;
-  criteriaScore3: string;
-  criteriaScore4: string;
+  basvuran_id : number;
+  adi : string;
+  soyadi : string;
+  email : string;
+  telefon_numarasi : string;
+  elts_puani : number;
+  universite : string;
+  not_ortalamasi : number;
+  is_deneyimi : number;
+  basvurulan_pozisyon : string;
+  basvurulan_departman : string;
 }
+
+export class GetCandidateResponse {
+  candidateList: CandidateInfo[];
+}
+

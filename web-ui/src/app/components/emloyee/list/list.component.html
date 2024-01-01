@@ -1,1 +1,88 @@
-<p>list works!</p>
+<mat-spinner *ngIf="isProgress" class="calculate-progress-bar"></mat-spinner>
+<div (click)="selectEmployee()"
+      style="width: 161px; height: 59px; padding: 10px; left: 380px; top: 43px; position: absolute; background: #0B2D4D; border-radius: 16px; justify-content: center; align-items: center; gap: 10px; display: inline-flex"
+      [style.left]="setLeftPosition(380,450)"
+      [ngStyle]="{'border': isSelectActivate ? '8px #45B2C1 solid': ''}">
+  <div style="text-align: center; color: white; font-size: 24px; font-family: Calibri; font-weight: 400; word-wrap: break-word">{{isSelectActivate ? 'Sonlandır' : 'Seçim Yap'}}</div>
+</div>
+<div (click)="showOnlyUnderPerformanceEmployees()"
+    style="width: 445px; height: 59px; top: 43px; position: absolute"
+    [style.left]="setLeftPosition(550,-170)"
+    [ngStyle]="{'border': onlyLowPerformanceEmployees ? '8px #45B2C1 solid': ''}">
+  <div style="width: 445px; height: 59px; padding: 10px; left: 0px; top: 0px; position: absolute; background: #0B2D4D; border-radius: 16px"></div>
+  <div style="left: 22px; top: 15px; position: absolute; text-align: center; color: white; font-size: 24px; font-family: Calibri; font-weight: 400; word-wrap: break-word">{{onlyLowPerformanceEmployees ? 'Bütün Çalışanları Görüntüle' : 'Düşük Performanslı Çalışanları Görüntüle'}}</div>
+</div>
+<ng-container *ngIf="isSelectActivate">
+  <div style="width: 124px; height: 44px; padding: 10px; left: 1264px; top: 50px; position: absolute; background: #FC4242; border-radius: 16px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+    <div style="text-align: center; color: white; font-size: 16px; font-family: Calibri; font-weight: 400; word-wrap: break-word">İşten Çıkar</div>
+  </div>
+  <div style="width: 124px; height: 44px; padding: 10px; left: 1132px; top: 50px; position: absolute; background: #45B2C1; border-radius: 16px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+      <div style="text-align: center; color: white; font-size: 16px; font-family: Calibri; font-weight: 400; word-wrap: break-word">Terfi Ettir</div>
+  </div>
+  <div style="width: 124px; height: 44px; padding: 10px; left: 1000px; top: 50px; position: absolute; background: #45B2C1; border-radius: 16px; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+      <div style="text-align: center; color: white; font-size: 16px; font-family: Calibri; font-weight: 400; word-wrap: break-word">Zam Yap</div>
+  </div>
+  <div style="width: 112px; height: 215px; padding-bottom: 171px; left: 1396px; top: 50px; position: absolute; flex-direction: column; justify-content: flex-start; align-items: center; display: inline-flex">
+      <div style="width: 124px; height: 44px; padding-top: 5px; padding-bottom: 5px; padding-left: 13px; padding-right: 10px; background: #45B2C1; border-radius: 16px; justify-content: flex-start; align-items: center; gap: 275px; display: inline-flex">
+          <div style="flex: 1 1 0; text-align: center; color: white; font-size: 16px; font-family: Inter; font-weight: 400; word-wrap: break-word">Görev Ata </div>
+      </div>
+  </div>
+</ng-container>
+<div style="width: 85%; height: 80%; left: 25%; top: 16%; position: absolute">
+  <div style="width: 85%; height: 83px; padding: 10px; left: 0px; top: 0px; position: absolute; background: #1B65A9; border-top-left-radius: 32px; border-top-right-radius: 32px; border: 3px black solid; justify-content: center; align-items: center; gap: 10px; display: inline-flex">
+      <div style="text-align: center; color: white; font-size: 32px; font-family: Calibri; font-weight: 400; word-wrap: break-word">Çalışan Listesi</div>
+  </div>
+  <div class="example-table-container">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container *ngIf="isSelectActivate" matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>Seç </th>
+        <td mat-cell *matCellDef="let row">
+          <!-- (click)="$event.stopPropagation()"
+                        (change)="$event ? candidateSelection.toggle(row) : null"
+                        [checked]="candidateSelection.isSelected(row)" -->
+          <mat-checkbox>
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <ng-container *ngFor="let columnTemplate of columnTemplateList" matColumnDef="{{columnTemplate.columnKey}}">
+        <th mat-header-cell *matHeaderCellDef sticky> {{columnTemplate.columnName}} </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="isNotSpecialColumn(columnTemplate.columnKey); else specialColumn"> {{element[columnTemplate.columnKey]}} </div>
+          <ng-template #specialColumn>
+            <button mat-icon-button [matMenuTriggerFor]="menu"
+                    (click)="selectSpecialColumn(columnTemplate.columnKey, element.calisanlar_id)">
+              <mat-icon >table_chart</mat-icon>
+            </button>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-menu #menu="matMenu" class="sub-table-menu">
+    <table mat-table [dataSource]="subDataSource" class="mat-elevation-z8 inner-table">
+      <ng-container *ngFor="let subColumnTemplate of subColumnTemplateList" matColumnDef="{{subColumnTemplate.columnKey}}">
+        <th mat-header-cell *matHeaderCellDef sticky> {{subColumnTemplate.columnName}} </th>
+        <td mat-cell *matCellDef="let element">
+            <div *ngIf="subColumnTemplate.isCheckbox; else textCell">
+              <div *ngIf="element.nonabsent && element.absent; else plainCheckbox">
+                <mat-checkbox [disabled]="true" [checked]="false">{{element.nonabsent}}</mat-checkbox>
+                <mat-checkbox [disabled]="true" [checked]="true">{{element.absent}}</mat-checkbox>
+              </div>
+              <ng-template #plainCheckbox>
+                <mat-checkbox [disabled]="true" [checked]="element[subColumnTemplate.columnKey]">{{subColumnTemplate.displayValue ? element[subColumnTemplate.columnKey] : ''}}</mat-checkbox>
+              </ng-template>
+            </div>
+            <ng-template #textCell>
+              {{element[subColumnTemplate.columnKey]}}
+            </ng-template>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="subDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: subDisplayedColumns;"></tr>
+    </table>
+  </mat-menu>
+</div>
+</div>

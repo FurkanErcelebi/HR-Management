@@ -11,6 +11,7 @@ import { MainLayoutComponent } from './components/layout/main-layout/main-layout
 import { SideMenuComponent } from './components/layout/side-menu/side-menu.component';
 import { EntranceComponent } from './components/layout/entrance/entrance.component';
 import { HttpClientModule } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,7 @@ import { HttpClientModule } from '@angular/common/http';
     CommonModules,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
